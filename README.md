@@ -6,23 +6,87 @@ Base branches are codebase which are deployed to live environments. These branch
 
 Only a PullRequest from a Release or HotFix branch should be authorized to be merged to a base branch (exceptions can be made for the Dev branch).
 
-- Dev : represents the development branch where developers can push their code and features freely. This branch should have its own live environment to help developers with their own test procedures.
-- Staging : host Release branches that need to be tested by QA. Once a developer is confident with his work within a Release branch, he should create a PR to Staging. He then needs to plan a testing session with QA . Once QA is ready to test, the PR can be merged.
-- Main: host the latest stable code. After QA fully tested and approved a Release branch, it is then merged to Main. The developer then creates a TAG release. The Main branch can be the source of a pre-release environment to test again before deploying the Tag to production.
+- $\textcolor{cyan}{\text{Dev}}$ : represents the $\textcolor{pink}{\text{development branch}}$ where developers can push their code and features freely. This branch should have its own live environment to help developers with their own test procedures.
+- $\textcolor{cyan}{\text{Staging}}$ : host Release branches that $\textcolor{pink}{\text{need to be tested by QA}}$. Once a developer is confident with his work within a Release branch, he should create a PR to Staging. He then needs to plan a testing session with QA . Once QA is ready to test, the PR can be merged.
+- $\textcolor{cyan}{\text{Main}}$: host the $\textcolor{pink}{\text{latest stable code}}$. After QA fully tested and approved a Release branch, it is then merged to Main. The developer then creates a TAG release. The Main branch can be the source of a pre-release environment to test again before deploying the Tag to production.
 
 ## Release branches
-A Release branch represents a planned release and can be composed of different features and work that needs to be released at a given time. It can be associated as an Epic on Jira. It is advised to isolate business scope within different Release in order to minimise the risk of conflicts with other simultaneous releases.
+A Release branch represents a planned release and can be composed of different features and work that needs to be released at a given time. It can be associated as an Epic on Jira for example. It is advised to isolate the business scope within different Release in order to minimise the risk of conflicts with other simultaneous releases.
 
-It should be composed of the Jira Epic/MainTask number and a name.
+It should be composed of the Task manager Epic/MainTask number and a name.
 
 The name should be explicit and short. Avoid using verbs, because it is redundant for a branch name. $\textcolor{pink}{\text{The goal here is to specify the scope, not the task.}}$
 
-todo
+**Naming:** 
+- $\textcolor{slateblue}{\text{jira-main-number}}$/ $\textcolor{teal}{\text{branch-name}}$
+- Use '_' to separate words
+- Only specify the scope, avoid using verbs such as add / update / delete ...
+- Keep it really short and concise
+  - Example: $\textcolor{slateblue}{\text{DX-50}}$/ $\textcolor{teal}{\text{login}}$
+
+**Rules:**
+- Only create Release branch from Main
+- Release branch merge flow :
+  - to 'dev' for developer own tests
+  - to 'staging' for QA
+  - to 'main' to create a release Tag
+- Only one release branch per task_main_number
+- Multiple Release branches can live at same time on Staging and Dev
+- Avoid shared scope between different Release branches . If you are working on the same part of the codebase for 2 different releases, it probably means that either you should only have one release or that one of the releases is scheduled way in the future which is ok(means that you will be able to merge Main back to your late second Release branch later on)
+- Use Merge or PullRequest to merge to Dev and PullRequest to merge to Staging and Main
+- $\textcolor{tomato}{\text{DO NOT MERGE STAGING TO MAIN}}$, only merge individual release branch to main once tested in staging
+- After each Release to production, merge Main back to each of your branches (Dev, Staging, all other Release branches...)
+- DO NOT MERGE Dev, Staging or other Release branch to your own Release branch. Only merge Main or SubRelease branch(children) with your Release branch
+
+[image]
 
 ### SubRelease branches
-todo
+A SubRelease branch can be created to represent a task or subtask within a release .
+It is considered as a child of a Release branch and needs to respect the same format as its parent.
+You can use SubRelease branch when multiple developers are working on the same release. Otherwise, it is better to stay on one branch and use proper commits format to reference tasks & subtasks. Value good commits structure over sub branches whenever possible.
+
+**Naming:**
+- $\textcolor{slateblue}{\text{jira-main-number}}$/ $\textcolor{lightblue}{\text{jira-sub-number}}$ _ $\textcolor{teal}{\text{branch-name}}$
+- Use '_' to separate words
+- Keep it explicit and relatively short
+  - Example: DX-50/DX-51_add_login_apis
+
+**Rules:**
+- Only create SubRelease branch from parent Release branch
+- Consider your parent Release branch as your only provider and destination (merge from and to)
+- Release branch merge flow :
+  - Only merge into parent Release branch either with Merge or PullRequest based on your rights
+  - Merging to any other branch is forbidden
+  - Refer to Release branch git flow for parent flow
+- Multiple SubRelease branches can be created under the same jira_sub_number, in order to represent each sub task if needed (it's better to simply use commits rules under the same SubRelease branch though)
+
 ## HotFix branches
-todo
+When a bug is found in production and needs immediate fix, a HotFix branch can be created to bypass the Release branches restrictions.
+**Naming:** 
+- $\textcolor{red}{\text{hotfix}}$/ $\textcolor{slateblue}{\text{jira-main-number}}$ _ $\textcolor{teal}{\text{hotfix-branch-name}}$
+- Use '_' to separate words
+- Keep it explicit and relatively short
+  - Example: hotfix/DX-50_login_api_fail
+
+**Rules:**
+- Only create HotFix branch from Main
+- Release branch merge flow :
+  - to 'dev' for developer own tests
+  - to 'staging' for QA
+  - to 'main' to publish the hotfix individually
+- $\textcolor{tomato}{\text{DO NOT MERGE STAGING TO MAIN}}$, only merge individual HotFix branches into Main once tested in staging
+- Only one hotfix branch per jira_main_number
+- Do not create sub branches for Hotfix branches
+
+[image]
+
+**Commit:**
+
+Hotfix commits should follow commits rules but only the keyword 'hotfix' is authorized.
+```
+hotfix: {message} #{jira_number}
+```
+
 ## Commits
 Commits are used to save work progress under a Release branch or SubRelease branch. It is advised to commit your progress regularly (at least one per day) with a relevant name which describes your changes. If possible, split your work into different commits to explicitly show your progress and facilitate commit reverse. $\textcolor{pink}{\text{One commit per completed step should be your goal.}}$
 
@@ -90,3 +154,5 @@ DESCRIPTION:
 
 
 ## Appendix
+- $\textcolor{slateblue}{\text{jira-main-number}}$ represents the parent feature, such as an epic on Jira
+- $\textcolor{lightblue}{\text{jira-sub-number}}$ represents the child of a feature or a task within a feature

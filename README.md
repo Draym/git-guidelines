@@ -6,9 +6,9 @@ Base branches are codebase which are deployed to live environments. These branch
 
 Only a PullRequest from a Release or HotFix branch should be authorized to be merged to a base branch (exceptions can be made for the Dev branch).
 
-- $\textcolor{cyan}{\text{Dev}}$ : represents the $\textcolor{pink}{\text{development branch}}$ where developers can push their code and features freely. This branch should have its own live environment to help developers with their own test procedures.
-- $\textcolor{cyan}{\text{Staging}}$ : host Release branches that $\textcolor{pink}{\text{need to be tested by QA}}$. Once a developer is confident with his work within a Release branch, he should create a PR to Staging. He then needs to plan a testing session with QA . Once QA is ready to test, the PR can be merged.
-- $\textcolor{cyan}{\text{Main}}$: host the $\textcolor{pink}{\text{latest stable code}}$. After QA fully tested and approved a Release branch, it is then merged to Main. The developer then creates a TAG release. The Main branch can be the source of a pre-release environment to test again before deploying the Tag to production.
+- $\textcolor{mediumturquoise}{\text{Dev}}$ : represents the $\textcolor{pink}{\text{development branch}}$ where developers can push their code and features freely. This branch should have its own live environment to help developers with their own test procedures.
+- $\textcolor{mediumturquoise}{\text{Staging}}$ : host Release branches that $\textcolor{pink}{\text{need to be tested by QA}}$. Once a developer is confident with his work within a Release branch, he should create a PR to Staging. He then needs to plan a testing session with QA . Once QA is ready to test, the PR can be merged.
+- $\textcolor{mediumturquoise}{\text{Main}}$: host the $\textcolor{pink}{\text{latest stable code}}$. After QA fully tested and approved a Release branch, it is then merged to Main. The developer then creates a TAG release. The Main branch can be the source of a pre-release environment to test again before deploying the Tag to production.
 
 ## Release branches
 A Release branch represents a planned release and can be composed of different features and work that needs to be released at a given time. It can be associated as an Epic on Jira for example. It is advised to isolate the business scope within different Release in order to minimise the risk of conflicts with other simultaneous releases.
@@ -22,7 +22,7 @@ The name should be explicit and short. Avoid using verbs, because it is redundan
 - Use '_' to separate words
 - Only specify the scope, avoid using verbs such as add / update / delete ...
 - Keep it really short and concise
-  - Example: $\textcolor{slateblue}{\text{DX-50}}$/ $\textcolor{teal}{\text{login}}$
+  - Example: DX-50/web3_login
 
 **Rules:**
 - Only create Release branch from Main
@@ -38,18 +38,19 @@ The name should be explicit and short. Avoid using verbs, because it is redundan
 - After each Release to production, merge Main back to each of your branches (Dev, Staging, all other Release branches...)
 - DO NOT MERGE Dev, Staging or other Release branch to your own Release branch. Only merge Main or SubRelease branch(children) with your Release branch
 
-[image]
+<img src="resources/feature.jpg" width="700">
 
 ### SubRelease branches
 A SubRelease branch can be created to represent a task or subtask within a release .
 It is considered as a child of a Release branch and needs to respect the same format as its parent.
-You can use SubRelease branch when multiple developers are working on the same release. Otherwise, it is better to stay on one branch and use proper commits format to reference tasks & subtasks. Value good commits structure over sub branches whenever possible.
+You can use SubRelease branch when multiple developers are working on the same release. Otherwise, it is better to stay on one branch and use proper commits format to reference tasks & subtasks. $\textcolor{pink}{\text{Value good commits structure over sub branches whenever possible.}}$
 
 **Naming:**
 - $\textcolor{slateblue}{\text{jira-main-number}}$/ $\textcolor{lightblue}{\text{jira-sub-number}}$ _ $\textcolor{teal}{\text{branch-name}}$
 - Use '_' to separate words
 - Keep it explicit and relatively short
-  - Example: DX-50/DX-51_add_login_apis
+  - Example: DX-50/DX-51_wallet_login
+  - Example: DX-50/DX-52_email_login
 
 **Rules:**
 - Only create SubRelease branch from parent Release branch
@@ -78,7 +79,7 @@ When a bug is found in production and needs immediate fix, a HotFix branch can b
 - Only one hotfix branch per jira_main_number
 - Do not create sub branches for Hotfix branches
 
-[image]
+<img src="resources/hotfix.jpg" width="700">
 
 **Commit:**
 
@@ -121,7 +122,7 @@ The required format will be as follows :
 - Keep it concise
   - Example :
 ```
-TITLE: [DEV] DX-50/login_flow
+TITLE: [DEV] DX-50/web3_login
  
 DESCRIPTION:
  Implement login APIs and set new password rules
